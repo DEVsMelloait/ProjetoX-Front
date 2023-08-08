@@ -1,49 +1,43 @@
-<script>
+<script lang="ts">
     import { DarkMode, Table, TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell } from 'flowbite-svelte';
     import AnchorSelected from './Componentes/Atons/Anchor-Selected.svelte';
-    export const item = [
-        { descricao: "Teste Produto", label: "Nome", cor:"branco", categoria:"jujuba"},] 
-    export const Header = [{descricao: "Nome do produto", cor: "Cor", categoria: "Categoria" , preco: "Preço"   }]
+    export let data: any;
+    
+    export let Header: any ;
+    
     export const Editar = Boolean;
  </script>
   
   <Table striped={true}>
     <TableHead>
         {#each Header as colunas }
-             <TableHeadCell>{colunas}</TableHeadCell>
+             <TableHeadCell>{colunas.label}</TableHeadCell>
         {/each}
-      <TableHeadCell>
-        <span class="sr-only"> Edit </span>
-      </TableHeadCell>
-    </TableHead>
-    <TableBody class="divide-y">
+      <TableHeadCell></TableHeadCell>
+    </TableHead> 
+
+    <TableBody>
+         {#each data as dados}
         <TableBodyRow>
-        {#each item as dados}
-        <TableBodyCell>{dados}</TableBodyCell>     
-        {/each}
+        <TableBodyCell>{dados.label}</TableBodyCell>     
+        <TableBodyCell>{dados.cor}</TableBodyCell>     
+        <TableBodyCell>{dados.categoria}</TableBodyCell>     
+        <TableBodyCell> R${dados.preco}</TableBodyCell>  
         <TableBodyCell>
-            <a href="/tables" class="font-medium text-primary-600 hover:underline dark:text-primary-500">
-              Edit
-            </a>
-          </TableBodyCell>
-        </TableBodyRow>
+      
+          <a href="/tables"  class=" text-primary-600 hover:underline dark:text-primary-500">
+            Editar
+          </a>
+          
 
-
-
-        {#each item as dados}
-        <TableBodyRow>
-            {#each dados as dado }
-            <TableBodyCell>{dado}</TableBodyCell>   
-            {/each}
-
-        </TableBodyRow>
-        {/each}
-
-    </TableBody>
-  
-
-
-
+          <a href="/tables" class="font-medium text-primary-600 hover:underline dark:text-primary-500">
+            Excluir
+          </a>
+ 
+        </TableBodyCell>  
+      </TableBodyRow> 
+        {/each} 
+    </TableBody> 
   </Table>
 
  

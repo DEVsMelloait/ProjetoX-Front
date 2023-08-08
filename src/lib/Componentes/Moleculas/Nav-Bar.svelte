@@ -2,6 +2,7 @@
     import { Navbar, NavBrand, NavLi, NavUl, NavHamburger } from 'flowbite-svelte'
     import Logo from '../Atons/Logo.svelte';
     import { page } from '$app/stores';
+    import Dark from '../Atons/Dark.svelte';
     export const paginas = [
         { href: "/", label: "Início" },
         { href: "/Clientes", label: "Clientes" },
@@ -14,13 +15,15 @@
     ];
   </script>
 
-<Navbar let:hidden let:toggle>
-    <NavBrand href="/">
+<Navbar class="bg-white dark:bg-gray-800" let:hidden let:toggle>
+    <NavBrand  href="/">
       <Logo/>
       <span class="self-center whitespace-nowrap text-xl font-semibold dark:text-white">
         MelloAIT
       </span>
     </NavBrand>
+ 
+
     <NavHamburger on:click={toggle} />
     <NavUl {hidden}>
         {#each paginas as {href,label} }
@@ -31,4 +34,5 @@
         {/if}
         {/each}
     </NavUl>
+    <Dark/>
   </Navbar>
