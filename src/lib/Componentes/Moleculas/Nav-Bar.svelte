@@ -3,6 +3,7 @@
     import Logo from '../Atons/Logo.svelte';
     import { page } from '$app/stores';
     import Dark from '../Atons/Dark.svelte';
+    import Translate from '../Atons/Translate.svelte';
     export const paginas = [
         { href: "/", label: "Início" },
         { href: "/Clientes", label: "Clientes" },
@@ -15,7 +16,7 @@
     ];
   </script>
 
-<Navbar class="bg-white dark:bg-gray-800" let:hidden let:toggle>
+<Navbar   class=" bg-gray-100 dark:bg-gray-800" let:hidden let:toggle>
     <NavBrand  href="/">
       <Logo/>
       <span class="self-center whitespace-nowrap text-xl font-semibold dark:text-white">
@@ -35,4 +36,5 @@
         {/each}
     </NavUl>
     <Dark/>
+    <Translate/>
   </Navbar>
