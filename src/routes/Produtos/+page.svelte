@@ -21,5 +21,9 @@
 </script>
 
 <div class="p-8">
+   
+
     <Table {Header} data={item} />
+ 
+    
 </div>
