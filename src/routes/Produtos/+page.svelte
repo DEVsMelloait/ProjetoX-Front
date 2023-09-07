@@ -42,12 +42,11 @@
         <Input type="text" name="categoria" placeholder="Descartavel" required />
       </Label>
       <Label class="space-y-2">
-        <span>Categoria</span>
+        <span>Preço</span>
         <Input type="number" name="preco" placeholder=10,00 required />
       </Label>
       <Button type="submit" class="w-full1"
-        >{edit == true ? "Editar" : "Adicionar"}</Button
-      >
+        >{edit == true ? "Editar" : "Adicionar"}</Button>
     </form>
   </Modal>
 </div>
