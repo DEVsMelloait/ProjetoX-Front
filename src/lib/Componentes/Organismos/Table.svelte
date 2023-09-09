@@ -48,6 +48,8 @@
         {/if}
        
       </TableBodyRow>
+      {:else}
+      <h3> Carregando... </h3>
     {/each}
   </TableBody>
 </Table>

@@ -1,10 +1,16 @@
-<script>
+<script lang="ts">
     import Endereco from "$lib/Componentes/Moleculas/Endereco.svelte";
 import Table from "$lib/Componentes/Organismos/Table.svelte";
 
     import { Button, Modal, Label, Input, Checkbox } from "flowbite-svelte";
     let formModal = false;
     let edit = false;
+    let EnderecoCliente = {
+        Cep: "22740-260",
+        Logradouro: "Rua Monsenhor maques",
+        Numero: "841",
+        Complemento: "Casa"
+    }
 
     const Header = [
         { label: "Nome", key: "label" },
@@ -44,6 +50,15 @@ import Table from "$lib/Componentes/Organismos/Table.svelte";
             preco: "123,00",
         },
     ];
+
+ 
+    function attEndereco(x: any){
+        EnderecoCliente.Cep = x.Cep;
+        EnderecoCliente.Logradouro = x.Logradouro;
+        EnderecoCliente.Numero = x.Numero;
+        EnderecoCliente.Complemento = x.Complemento;
+
+    }
 </script>
 
 <div class="p-8">
@@ -80,7 +95,8 @@ import Table from "$lib/Componentes/Organismos/Table.svelte";
                     />
                 </div>
             </div>
-            <Endereco/>
+            <Endereco on:endereco={attEndereco} Endereco={EnderecoCliente} />
+            {EnderecoCliente.Cep}
             <Button type="submit" class="w-full1"
                 >{edit == true ? "Editar" : "Adicionar"}</Button
             >
