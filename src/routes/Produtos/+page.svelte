@@ -13,10 +13,13 @@
     let formModal = false;
     let edit = false;
 
-    // campos do produto
+    // campos do produto 
     let nome: string = "";
     let categoria: string = "";
-    let preco: number = 0;
+    let precoFim: number = 0;
+    let precoCusto: number = 0;
+    let retornavel: boolean = false;
+    let suppliersId: number = 1;
 
     // item para mandar para a api
     let item: Produto = {
@@ -36,63 +39,69 @@
     let itens: Produto[] = [{ label: "teste", categoria: "teste", preco: 123 }];
     let lista: [];
 
-    function addProduct() {
-        debugger;
-        item.label = nome;
-        item.categoria = categoria;
-        item.preco = preco;
-        const response = fetch("http://localhost:8081/api/v1/product", {
-            method: "POST",
-            headers: {
-                "content-type": "aplication/json",
-            },
-            body: JSON.stringify({
-                nome: item.label,
-                categoria: item.categoria,
-                preco: item.preco,
-            }),
-        });
-
-        console.log(response);
+       async function addProduct() {
+        
+            
+            const data={
+                "name":nome,
+                "categoria":categoria,
+                "preco_final":precoFim,
+                "suppliersId":suppliersId,
+                "preco_custo":precoCusto,
+                "retornavel":retornavel
+            };
+            const res=await fetch("http://localhost:8081/api/v1/product", {
+                mode: 'no-cors',
+                method:"POST",
+                body:JSON.stringify(data),
+                headers: { "content-type": "aplication/json"},
+            }); 
+            const output = await res.json();
+            console.log(output);    
+     
 
         itens.push(item);
         itens = itens;
     }
 
-    function editProduct() {
-        const response = fetch(
-            "http://localhost:8081/api/v1/product/" + item.id,
-            {
-                method: "PUT",
-                headers: {
-                    "content-type": "aplication/json",
-                },
-                body: JSON.stringify({
-                    id: item.id,
-                    nome: item.label,
-                    categoria: item.categoria,
-                    preco: item.preco,
-                }),
-            }
-        );
+    // function editProduct() {
+    //     const response = fetch(
+    //         "http://localhost:8081/api/v1/product/" + item.id,
+    //         {
+    //             method: "PUT",
+    //             headers: {
+    //                 "content-type": "aplication/json",
+    //             },
+    //             body: JSON.stringify({
+    //                 id: item.id,
+    //                 nome: item.label,
+    //                 categoria: item.categoria,
+    //                 preco: item.preco,
+    //             }),
+    //         }
+    //     );
 
-        console.log(response);
-    }
+    //     console.log(response);
+    // }
 
-    function deleteProduct() {
-        const response = fetch(
-            "http://localhost:8081/api/v1/product/" + item.id,
-            {
-                method: "PUT",
-            }
-        );
+    // function deleteProduct() {
+    //     const response = fetch(
+    //         "http://localhost:8081/api/v1/product/" + item.id,
+    //         {
+    //             method: "PUT",
+    //         }
+    //     );
 
-        console.log(response);
-    }
+    //     console.log(response);
+    // }
 
     onMount(async () => {
         // get all
-        const response = await fetch("http://localhost:8081/api/v1/product");
+        debugger
+        const response = await fetch("http://localhost:8081/api/v1/product", {
+                mode: 'no-cors',
+                method:"GET", 
+            });  
         lista = await response.json();
         console.log(lista);
     });
@@ -129,14 +138,23 @@
                 />
             </Label>
             <Label class="space-y-2">
-                <span>Preço</span>
+                <span>Preço final</span>
                 <Input
                     type="number"
                     name="preco"
                     placeholder="10,00"
-                    bind:value={preco}
+                    bind:value={precoFim}
                 />
             </Label>
+            <Label class="space-y-2">
+            <span>Preço de custo</span>
+            <Input
+                type="number"
+                name="preco"
+                placeholder="10,00"
+                bind:value={precoCusto}
+            />
+        </Label>
             <Button type="submit" class="w-full1" on:click={addProduct}
                 >{edit == true ? "Editar" : "Adicionar"}</Button
             >
