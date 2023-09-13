@@ -1,110 +1,74 @@
 <script lang="ts">
     import Table from "$lib/Componentes/Organismos/Table.svelte";
-    import { text } from "@sveltejs/kit";
-    import { Button, Modal, Label, Input, Checkbox, P } from "flowbite-svelte";
+    // import { text } from "@sveltejs/kit";
+    import { Button, Modal, Label, Input, Select } from "flowbite-svelte";
     import { onMount } from "svelte";
-    interface Produto {
-        id?: number;
-        label: string;
-        categoria: string;
-        preco: number;
-    }
+    import { GetAll, Post } from "../../core/services/ProductService";
+    import { GetAll as GetCategoria } from "../../core/services/CategoriaService";
+    import Swal from "sweetalert2";
+    import type { Product } from "../../core/models/Product";
+    import type { Categoria } from "../../core/models/Categoria";
 
     let formModal = false;
     let edit = false;
 
-    // campos do produto 
+    // campos do produto
     let nome: string = "";
     let categoria: string = "";
     let precoFim: number = 0;
     let precoCusto: number = 0;
-    let retornavel: boolean = false;
-    let suppliersId: number = 1;
-
-    // item para mandar para a api
-    let item: Produto = {
-        id: 0,
-        label: "",
-        categoria: "",
-        preco: 0,
+    let item: Product = {
+        name: "",
+        tipo: 1,
+        categoriaId: 0,
+        preco_custo: 0,
+        preco_final: 0,
+        suppliersId: 0,
     };
+    let itens: Product[] = [];
+    let categorias: Categoria[] = [];
+    let cat: any[] = [];
 
     const Header = [
-        { label: "Nome", key: "label" },
+        { label: "Nome", key: "name" },
         { label: "Categoria", key: "categoria" },
-        { label: "Preço", key: "preco" },
+        { label: "Preço Final", key: "preco_final" },
+        { label: "Preço Custo", key: "preco_custo" },
         { label: "Ações", action: true },
     ];
 
-    let itens: Produto[] = [{ label: "teste", categoria: "teste", preco: 123 }];
-    let lista: [];
-
-       async function addProduct() {
-        
-            
-            const data={
-                "name":nome,
-                "categoria":categoria,
-                "preco_final":precoFim,
-                "suppliersId":suppliersId,
-                "preco_custo":precoCusto,
-                "retornavel":retornavel
-            };
-            const res=await fetch("http://localhost:8081/api/v1/product", {
-                mode: 'no-cors',
-                method:"POST",
-                body:JSON.stringify(data),
-                headers: { "content-type": "aplication/json"},
-            }); 
-            const output = await res.json();
-            console.log(output);    
-     
-
-        itens.push(item);
-        itens = itens;
+    async function Criar() {
+        debugger
+        let restorno = await Post(item);
+        if (restorno) {
+            Swal.fire({
+                icon: "success",
+                title: "Sucesso",
+                text: "Produto adicionado com sucesso!",
+            }).then(() => {
+                formModal = false;
+                loadAll(); 
+            })
+        }
     }
-
-    // function editProduct() {
-    //     const response = fetch(
-    //         "http://localhost:8081/api/v1/product/" + item.id,
-    //         {
-    //             method: "PUT",
-    //             headers: {
-    //                 "content-type": "aplication/json",
-    //             },
-    //             body: JSON.stringify({
-    //                 id: item.id,
-    //                 nome: item.label,
-    //                 categoria: item.categoria,
-    //                 preco: item.preco,
-    //             }),
-    //         }
-    //     );
-
-    //     console.log(response);
-    // }
-
-    // function deleteProduct() {
-    //     const response = fetch(
-    //         "http://localhost:8081/api/v1/product/" + item.id,
-    //         {
-    //             method: "PUT",
-    //         }
-    //     );
-
-    //     console.log(response);
-    // }
 
     onMount(async () => {
         // get all
-        debugger
-        const response = await fetch("http://localhost:8081/api/v1/product", {
-                mode: 'no-cors',
-                method:"GET", 
-            });  
-        lista = await response.json();
-        console.log(lista);
+        loadAll();
+        loadCategoria();
+       
     });
+
+    async function loadCategoria() {
+        categorias = await GetCategoria();
+        categorias.forEach((f) => {
+            cat.push({ value: f.id, name: f.name });
+        });
+    }
+    async function loadAll() {
+        itens = await GetAll();
+    }
+
 </script>
 
 <div class="p-8">
@@ -114,7 +78,7 @@
     </div>
 
     <!-- Modal -->
-    <Modal bind:open={formModal} size="md" autoclose={false} class="w-full">
+    <Modal bind:open={formModal} size="md" autoclose={true} class="w-full">
         <form class="flex flex-col space-y-6" action="#">
             <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white">
                 {edit == true ? "Editar" : "Adicionar"} Produto
@@ -125,16 +89,17 @@
                     type="text"
                     name="nome"
                     placeholder="Nome"
-                    bind:value={nome}
+                    bind:value={item.name}
                 />
             </Label>
-            <Label class="space-y-2">
-                <span>Categoria</span>
-                <Input
-                    type="text"
-                    name="categoria"
-                    placeholder="Descartavel"
-                    bind:value={categoria}
+
+            <Label>
+                Categoria
+                <Select
+                    class="mt-2"
+                    items={cat}
+                    bind:value={item.categoriaId}
+                    placeholder="Selecione"
                 />
             </Label>
             <Label class="space-y-2">
@@ -142,20 +107,20 @@
                 <Input
                     type="number"
                     name="preco"
-                    placeholder="10,00"
-                    bind:value={precoFim}
+                    placeholder="R$:10,00"
+                    bind:value={item.preco_final}
                 />
             </Label>
             <Label class="space-y-2">
-            <span>Preço de custo</span>
-            <Input
-                type="number"
-                name="preco"
-                placeholder="10,00"
-                bind:value={precoCusto}
-            />
-        </Label>
-            <Button type="submit" class="w-full1" on:click={addProduct}
+                <span>Preço de custo</span>
+                <Input
+                    type="number"
+                    name="preco"
+                    placeholder="10,00"
+                    bind:value={item.preco_custo}
+                />
+            </Label>
+            <Button type="submit" class="w-full1" on:click={Criar}
                 >{edit == true ? "Editar" : "Adicionar"}</Button
             >
         </form>
