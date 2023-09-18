@@ -17,7 +17,11 @@ export async function Find(id: number): Promise<Product[]> {
     const { data } = await http.get<Product[], AxiosResponse>(`${controller}/${id}`);
     return data;
 }
-export async function Edit(id: number): Promise<Product[]> {
-    const { data } = await http.put<Product[], AxiosResponse>(`${controller}/${id}`);
+export async function Edit(item: Product, id: number): Promise<Product[]> {
+    const { data } = await http.put<Product[], AxiosResponse>(`${controller}/${id}`,item);
+    return data;
+}
+export async function Delete(id: number): Promise<Product[]> {
+    const { data } = await http.delete<Product[], AxiosResponse>(`${controller}/${id}`);
     return data;
 }

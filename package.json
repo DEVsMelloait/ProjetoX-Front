@@ -33,7 +33,7 @@
     "flowbite-svelte": "^0.42.0",
     "flowbite-svelte-icons": "^0.3.6",
     "path": "^0.12.7",
-    "sweetalert2": "^11.7.27",
+    "sweetalert2": "^11.7.28",
     "tailwind-merge": "^1.14.0"
   }
 }
