@@ -11,23 +11,32 @@
     TableHeadCell,
   } from "flowbite-svelte";
   import { createEventDispatcher } from "svelte";
+  import { CheckCircleOutline, FilePenOutline,CloseCircleSolid } from 'flowbite-svelte-icons';
+
   let popupModal = false;
-  let idD: any = null;
+  let idActions: any = null;
+  let statusActions: any;
   export let data: any;
   export let Header: any;
   export const Editar = Boolean;
 
   const dispatch = createEventDispatcher();
-  function deletarModal(id: number): void {
-    debugger;
-    idD = id;
+  function modalAction(id: number, status: boolean): void {
+    idActions = id;
+    statusActions = status;
     popupModal = true;
   }
-  function deletar() {
-    debugger;
-    dispatch("deleteData", {
-      item: idD,
-    });
+  function action() {
+    if(statusActions == true){
+
+      dispatch("deleteData", {
+        item: idActions,
+      });
+    }else{
+      dispatch("activeData", {
+        item: idActions,
+      });
+    }
   }
   function editar(data: any) {
     dispatch("editData", {
@@ -70,12 +79,26 @@
         {#if Header}
           <TableBodyCell style="text-align: center;">
             <ButtonGroup class="space-x-px">
-              <Button on:click={() => editar(dado)} pill color="green"
-                >Editar</Button
+
+              <Button style="width:85px;padding-right: 5px;" on:click={() => editar(dado)} pill color="yellow"
+                >
+                Editar  
+                <FilePenOutline style=" height: 15px;margin-left: 3px;"/>
+                </Button
               >
-              <Button on:click={() => deletarModal(dado.id)} pill color="red"
-                >Excluir</Button
+              {#if dado.status == true }
+              <Button style="width: 80px ;padding-left: 5px;" on:click={() => modalAction(dado.id, true)} pill color="red"
+                >
+                <CloseCircleSolid style=" height: 15px; "/>
+                Inativa</Button
               >
+              {:else}
+              <Button style="width: 80px; padding-left: 5px;" on:click={() => modalAction(dado.id, false)} pill color="green"
+                >
+                <CheckCircleOutline style=" height: 15px;margin-right: 4px;"/>
+                Ativar</Button
+              >
+              {/if}
             </ButtonGroup>
           </TableBodyCell>
         {/if}
@@ -91,9 +114,9 @@
 <Modal bind:open={popupModal} size="xs" autoclose>
   <div class="text-center">
     <h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
-      Tem certeza que deseja excluir?
+      Tem certeza que deseja { statusActions == true ?  "inativar": "Ativar"} ?
     </h3>
-    <Button color="red" class="mr-2" on:click={deletar}>Tenho certeza!</Button>
+    <Button color="red" class="mr-2" on:click={action}>Tenho certeza!</Button>
     <Button color="alternative">Cancelar</Button>
   </div>
 </Modal>

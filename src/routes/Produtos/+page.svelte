@@ -8,6 +8,7 @@
         Input,
         Select,
         Datepicker,
+        Toggle,
     } from "flowbite-svelte";
     import { onMount } from "svelte";
     import {
@@ -15,11 +16,16 @@
         Post,
         Delete,
         Edit,
+        Active
     } from "../../core/services/ProductService";
     import { GetAll as GetCategoria } from "../../core/services/CategoriaService";
     import type { Product } from "../../core/models/Product";
     import type { Categoria } from "../../core/models/Categoria";
+    import { FileCirclePlusOutline, PlusOutline  } from 'flowbite-svelte-icons';
 
+    
+    let title = "Produto";
+    let showInactive = false;
     let formModal = false;
     let editar = false;
     let item: Product = {
@@ -49,7 +55,6 @@
     ];
 
     async function CriarOrEditar() {
-        debugger;
         let retorno;
         if (item.id) {
             retorno = await Edit(item, item.id);
@@ -61,14 +66,12 @@
             if (retorno) {
                 alert("Criou");
             }
-        }
-
+        } 
         loadAll();
     }
 
     async function Editar(event: any) {
         editar = true;
-        debugger;
         item.id = event.detail.item.id;
         item.name = event.detail.item.name;
         item.tipo = event.detail.item.tipo;
@@ -79,8 +82,13 @@
         formModal = true;
     }
 
+    async function Ativar(event: any) {
+        let retorno = await Active(event.detail.item);
+        if (retorno) {
+        }
+        loadAll();
+    }
     async function Deletar(event: any) {
-        debugger;
         let retorno = await Delete(event.detail.item);
         if (retorno) {
         }
@@ -88,7 +96,6 @@
     }
 
     function abrirModal() {
-        debugger;
         item = {
             id: 0,
             name: "",
@@ -115,26 +122,42 @@
     async function loadAll() {
         debugger;
         itens = await GetAll();
-        itens = itens.filter((el) => el.status === true);
+        if(showInactive == false){ 
+            itens = itens.filter((el) => el.status === true);
+        }else{
+            itens = itens.filter((el) => el.status === false);
+        }
+    }
+
+    function changeLista(){
+        debugger
+        showInactive = !showInactive;
+        loadAll();
     }
 </script>
 
 <div class="p-8">
+    <div style="margin: 1%; display:flex ;justify-content: space-between;">
+        <Toggle checked={showInactive} on:click={changeLista}>{showInactive == true ? "Mostrar inativos" : "Mostrar ativos"}</Toggle>
+     
+        <Button on:click={abrirModal}>
+            <FileCirclePlusOutline style=" height: 15px;margin-right: 4px;"/>
+            Novo {title}</Button>
+    </div>
+
     <Table
         {Header}
         data={itens}
         on:deleteData={(x) => Deletar(x)}
         on:editData={(x) => Editar(x)}
+        on:activeData={(x) => Ativar(x) }
     />
-    <div style=" text-align: end; margin-top: 15px; ">
-        <Button on:click={abrirModal}>Novo Produto</Button>
-    </div>
-
+    
     <!-- Modal -->
     <Modal bind:open={formModal} size="md" autoclose={true} class="w-full">
         <form class="flex flex-col space-y-6" action="#">
             <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white">
-                {editar == true ? "Editar" : "Adicionar"} Produto
+                {editar == true ? "Editar" : "Adicionar"} {title}
             </h3>
             <Label class="space-y-2">
                 <span>Nome</span>

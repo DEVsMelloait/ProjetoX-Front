@@ -9,7 +9,6 @@ export async function GetAll(): Promise<Product[]> {
     return data;
 }
 export async function Post(item: Product): Promise<Product> {
-    debugger
     const { data } = await http.post<Product, AxiosResponse>(`${controller}`, item);
     return data;
 }
@@ -23,5 +22,9 @@ export async function Edit(item: Product, id: number): Promise<Product[]> {
 }
 export async function Delete(id: number): Promise<Product[]> {
     const { data } = await http.delete<Product[], AxiosResponse>(`${controller}/${id}`);
+    return data;
+}
+export async function Active(id: number): Promise<Product[]> {
+    const { data } = await http.put<Product[], AxiosResponse>(`${controller}/active/${id}`);
     return data;
 }
