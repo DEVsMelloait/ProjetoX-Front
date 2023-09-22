@@ -95,7 +95,7 @@ import Table from "$lib/Componentes/Organismos/Table.svelte";
                     />
                 </div>
             </div>
-            <Endereco on:endereco={attEndereco} Endereco={EnderecoCliente} />
+            <Endereco on:endereco={attEndereco} bind:Endereco={EnderecoCliente} />
             {EnderecoCliente.Cep}
             <Button type="submit" class="w-full1"
                 >{edit == true ? "Editar" : "Adicionar"}</Button
