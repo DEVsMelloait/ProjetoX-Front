@@ -108,6 +108,20 @@
         };
         formModal = true;
     }
+
+    function abrirModal() {
+        item = {
+            id: 0,
+            name: "",
+            categoriaId: 0,
+            status: true,
+            tipo: undefined,
+            preco_custo: 0,
+            preco_final: 0,
+            suppliersId: 1,
+        };
+        formModal = true;
+    }
     onMount(async () => {
         loadAll();
         loadCategoria();
