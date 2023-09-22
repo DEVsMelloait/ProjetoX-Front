@@ -1,3 +1,7 @@
+# Badge
+
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=DEVsMelloait_ProjetoX-Front&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=DEVsMelloait_ProjetoX-Front)
+
 # create-svelte
 
 Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).
