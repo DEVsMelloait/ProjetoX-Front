@@ -25,7 +25,7 @@
     position: absolute;
   bottom: 0;
   width: 100%;
-  height: 180px;            /* altura do rodapé */
+  height: 180px;     /* altura do rodapé */
   }
   #page-container {
   position: relative;

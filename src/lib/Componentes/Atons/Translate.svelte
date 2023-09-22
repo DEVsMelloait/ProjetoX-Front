@@ -2,7 +2,7 @@
 // @ts-nocheck
 
     import { Button, Dropdown, DropdownItem } from 'flowbite-svelte';
-    import { Icon } from 'flowbite-svelte-icons';
+    // import { Icon } from 'flowbite-svelte-icons';
     let derivedObject;
     let selectedOption;
     let lang = [
